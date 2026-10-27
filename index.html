@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SnarkGuyBill Live</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="channel">
+      <span class="avatar" aria-hidden="true">B</span>
+      <div class="channel-text">
+        <div class="channel-name">SnarkGuyBill</div>
+        <div class="channel-sub" id="slot-label">Day 1 · Day Stream</div>
+      </div>
+    </div>
+    <div class="live-meta">
+      <span class="live-badge" id="live-badge">OFFLINE</span>
+      <span class="viewers" id="viewers">0 followers</span>
+      <span class="clock" id="clock">1:00</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage-col" aria-label="Stream">
+      <div class="stage" id="stage">
+        <div class="room" aria-hidden="true">
+          <div class="poster">#1<br>GAMER</div>
+          <div class="shelf"></div>
+          <div class="led"></div>
+        </div>
+
+        <!-- Placeholder Bill. Set bill_idle in js/assets.js to use real art. -->
+        <div class="bill" id="bill" data-mood="smug">
+          <svg class="bill-svg" viewBox="0 0 240 240" role="img" aria-label="SnarkGuyBill">
+            <path class="b-shirt" d="M24 240 C34 192 78 176 120 176 C162 176 206 192 216 240 Z"/>
+            <path class="b-shirt-line" d="M96 182 L120 214 L144 182"/>
+            <ellipse class="b-skin" cx="58" cy="120" rx="10" ry="16"/>
+            <ellipse class="b-skin" cx="182" cy="120" rx="10" ry="16"/>
+            <ellipse class="b-skin b-head" cx="120" cy="114" rx="62" ry="70"/>
+            <path class="b-stubble" d="M74 138 C84 186 156 186 166 138 C150 168 90 168 74 138 Z"/>
+            <path class="b-hair" d="M64 86 C66 50 108 34 150 44 C172 50 182 66 178 84 C160 70 140 66 120 68 C98 70 80 76 64 86 Z"/>
+            <path class="b-headset" d="M50 114 C50 34 190 34 190 114"/>
+            <rect class="b-cup" x="40" y="100" width="18" height="36" rx="6"/>
+            <rect class="b-cup" x="182" y="100" width="18" height="36" rx="6"/>
+            <path class="b-headset" d="M50 134 C56 160 76 170 94 168"/>
+            <circle class="b-cup" cx="98" cy="168" r="6"/>
+            <ellipse class="b-eye" cx="98" cy="110" rx="8" ry="5"/>
+            <ellipse class="b-eye" cx="142" cy="110" rx="8" ry="5"/>
+            <circle class="b-pupil" cx="100" cy="111" r="2.8"/>
+            <circle class="b-pupil" cx="144" cy="111" r="2.8"/>
+            <path class="b-line" d="M89 119 q9 5 18 0 M133 119 q9 5 18 0"/>
+            <path class="b-brow b-brow-l" d="M84 98 L112 101"/>
+            <path class="b-brow b-brow-r" d="M128 101 L156 97"/>
+            <path class="b-line" d="M121 114 C114 130 112 136 124 138"/>
+            <path class="b-mouth" d="M100 154 C114 158 132 156 146 147"/>
+            <ellipse class="b-mouth-open" cx="121" cy="154" rx="13" ry="7"/>
+          </svg>
+        </div>
+
+        <div class="pop-layer" id="pop-layer" aria-hidden="true"></div>
+        <p class="caption" id="caption" aria-live="polite" hidden></p>
+
+        <div class="overlay" id="start-screen">
+          <div class="overlay-card">
+            <p class="eyebrow">Your job: moderator</p>
+            <h1>Keep chat nice to Bill</h1>
+            <p>Bill goes live for 60 seconds. Delete the nasty messages before he reads them. Leave the compliments alone. He needs those.</p>
+            <button class="btn" id="start-button" type="button">Go live</button>
+          </div>
+        </div>
+
+        <div class="overlay" id="results-screen" hidden>
+          <div class="overlay-card results">
+            <p class="eyebrow">Stream over</p>
+            <div class="result-head">
+              <span class="result-ego" id="result-ego">0</span>
+              <span class="result-ego-label">Ego this stream</span>
+            </div>
+            <p class="verdict" id="result-verdict"></p>
+            <dl class="result-grid">
+              <div><dt>Trolls deleted</dt><dd id="result-caught">0</dd></div>
+              <div><dt>Trolls Bill read</dt><dd id="result-missed">0</dd></div>
+              <div><dt>Frustration</dt><dd id="result-frustration">0</dd></div>
+              <div><dt>Fans deleted</dt><dd id="result-positive">0</dd></div>
+              <div><dt>Normal chat deleted</dt><dd id="result-benign">0</dd></div>
+            </dl>
+            <p class="result-range" id="result-range"></p>
+            <button class="btn" id="again-button" type="button">Run it back</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+
+      <dl class="hud">
+        <div class="stat"><dt>Followers</dt><dd id="stat-followers">0</dd></div>
+        <div class="stat"><dt>Money</dt><dd id="stat-money">$0</dd></div>
+        <div class="stat stat-ego"><dt>Ego</dt><dd id="stat-ego">0</dd></div>
+        <div class="stat"><dt>Trust</dt><dd id="stat-trust">0</dd></div>
+        <div class="stat stat-frustration">
+          <dt>Frustration</dt><dd id="stat-frustration">0</dd>
+          <div class="meter" aria-hidden="true"><div class="meter-fill" id="frustration-fill"></div></div>
+        </div>
+      </dl>
+    </section>
+
+    <aside class="chat" aria-label="Stream chat">
+      <div class="chat-head">
+        <span class="chat-title">Stream chat</span>
+        <span class="mod-tag">Mod</span>
+      </div>
+      <div class="chat-body">
+        <ol class="chat-list" id="chat-list"></ol>
+        <p class="chat-empty" id="chat-empty">Chat is quiet. It won't be for long.</p>
+      </div>
+      <p class="chat-foot">Click a message to delete it. The bar shows how long until Bill reads it.</p>
+    </aside>
+  </main>
+</div>
+
+<!-- Data and settings: edit these freely -->
+<script src="js/config.js"></script>
+<script src="js/assets.js"></script>
+<script src="js/data/streamer-script.js"></script>
+<script src="js/data/chat-messages.js"></script>
+<!-- Game code -->
+<script src="js/game-state.js"></script>
+<script src="js/stream-event.js"></script>
+<script src="js/stream-view.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
